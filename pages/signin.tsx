@@ -8,8 +8,11 @@ import {
     Heading,
     Input,
     Stack,
+    Icon,
+    Text
 } from '@chakra-ui/react';
 import signIn from "@/pages/signIn/signin";
+import {ArrowBackIcon} from "@chakra-ui/icons";
 export default function Signin() {
     const router = useRouter();
     const [email, setEmail] = useState('');
@@ -78,6 +81,16 @@ export default function Signin() {
             >
                 Sign In
             </Button>
+            <Text textAlign="center">
+                <Icon as={ArrowBackIcon} mr={2} />
+                <Button
+                    variant="link"
+                    onClick={() => router.push('/signup')}
+                >
+                    Sign Up
+                </Button>
+            </Text>
+
             {error && (
                 <FormControl isInvalid>
                     <FormErrorMessage textAlign="center" mt={4}>

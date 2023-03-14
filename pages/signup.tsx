@@ -10,6 +10,8 @@ import {
     Stack,
 } from '@chakra-ui/react';
 import signUp from "@/firebase/auth/signup";
+import ReactImagePickerEditor, { ImagePickerConf } from 'react-image-picker-editor';
+import 'react-image-picker-editor/dist/index.css'
 
 export default function Signup() {
     const router = useRouter();
@@ -18,7 +20,27 @@ export default function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [username, setUserName] = useState('');
+    const [imageSrc, setImageSrc] = useState<string | null | undefined>('');
 
+//image picker
+
+    const config2: ImagePickerConf = {
+        borderRadius: '9000px',
+        language: 'en',
+        width: '330px',
+        height: '250px',
+        objectFit: 'contain',
+        compressInitial: null,
+    };
+
+    const initialImage = '';
+
+
+
+
+
+//submit form
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         setIsLoading(true);
@@ -31,10 +53,8 @@ export default function Signup() {
         }
 
         try {
-            const result = await signUp(email, password);
-            if (result.error) {
-                return console.log(result.error);
-            }
+            const result = await signUp(email,username, password);
+               console.log(result);
             await router.push('/signin');
         } catch (error) {
             return console.log(error);
@@ -43,6 +63,23 @@ export default function Signup() {
 
     return (
         <Stack spacing={4} mx="auto" maxW="lg" py={12} px={6}>
+
+            <ReactImagePickerEditor
+                config={config2}
+                imageSrcProp={initialImage}
+                imageChanged={(newDataUri: any) => { setImageSrc(newDataUri) }} />
+            {imageSrc && (
+                <img
+                    src={imageSrc}
+                    alt="example"
+                    style={{
+                        maxHeight: '900px',
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        background: 'black',
+                    }}
+                />
+            )}
             <Heading textAlign="center">Sign Up</Heading>
             <FormControl id="email" isRequired>
                 <FormLabel>Email</FormLabel>
@@ -51,6 +88,15 @@ export default function Signup() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                />
+            </FormControl>
+            <FormControl id="username">
+                <FormLabel>Email</FormLabel>
+                <Input
+                    type="text"
+                    placeholder="Enter your username"
+                    value={email}
+                    onChange={(e) => setUserName(e.target.value)}
                 />
             </FormControl>
             <FormControl id="password" isRequired>
